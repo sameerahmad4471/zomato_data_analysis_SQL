@@ -1,1 +1,16 @@
+1:  sum of total amount spend by each customer
 
+select s.userid,sum(p.price) as total_amount from sales s
+join product p on s.product_id = p.product_id
+group by userid
+
+2: how many days each customer visited on zomato site 
+
+select userid ,count(distinct created_date ) as visit_cnt from sales
+group by userid
+
+3 : First product purchased by each customer 
+
+select * from
+(select *,rank() over(partition by userid order by created_date) rnk from sales)a
+where rnk = 1

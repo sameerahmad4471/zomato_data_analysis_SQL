@@ -14,3 +14,25 @@ group by userid
 select * from
 (select *,rank() over(partition by userid order by created_date) rnk from sales)a
 where rnk = 1
+
+
+4 : Most purchased item and how many times each customer purchased it
+
+select product_id ,count(product_id) cnt from sales
+group by product_id 
+order by cnt desc
+
+
+select userid,count(product_id) from sales where product_id =
+(select product_id from sales group by product_id 
+order by count(product_id) desc limit 1)
+group by userid
+
+
+5 : Most popular item by each customer
+
+select * from
+(select * ,rank() over(partition by userid order by cnt desc) rnk from
+(select userid,product_id ,count(product_id) cnt from sales
+group by userid,product_id)a)b
+where rnk = 1
